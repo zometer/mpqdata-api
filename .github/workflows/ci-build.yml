@@ -1,0 +1,22 @@
+# CI Build
+
+name: CI Build
+
+on:
+  push:
+    branches: [ main, feature/**, bugfix/** ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs: 
+      gradleArgs: 
+        description: 'Additional Gradle parameters'     
+        required: false
+        default: '' 
+        type: string
+
+jobs:
+  build:
+    uses: zometer/github-actions/.github/workflows/build-gradle-docker-helm.yml@main 
+    with: 
+      gradleArgs: ${{ inputs.gradleArgs }}
