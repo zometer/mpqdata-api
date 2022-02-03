@@ -1,0 +1,28 @@
+# This Workflow will run the typical CI build and publish the jar to 
+# the specified maven repo (probably GitHub packages).
+
+name: Publish Jar
+
+on:
+  workflow_dispatch:
+    inputs:
+      gradleTasks:
+        description: 'Gradle Tasks'
+        required: false
+        default: 'build publish'
+        type: string
+      gradleArgs:
+        description: 'Additional Gradle parameters'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  build:
+    uses: zometer/github-actions/.github/workflows/build-gradle-docker-helm.yml@main 
+    with: 
+      gradleTasks: ${{ github.event.inputs.gradleTasks }} 
+      gradleArgs: ${{ github.event.inputs.gradleArgs }}    
+    permissions:
+      contents: read
+      packages: write
