@@ -21,3 +21,5 @@ jobs:
     uses: zometer/github-actions/.github/workflows/build-gradle.yml@main 
     with: 
       gradleArgs: ${{ github.event.inputs.gradleArgs }}
+      buildDockerImage: true
+      uploadHelmChart: false
