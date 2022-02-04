@@ -89,10 +89,17 @@ Endpoint: /api/rest/v{version}/hello
 
 ```bash 
 # Hello Request 
-$ curl 
+$ curl http://localhost:8080/api/rest/v1/hello
 ```
 
 ```json 
+{
+  "artifact": "mpqdata-api",
+  "apiVersion": "1",
+  "now": "2022-02-04T07:21:42.122+00:00",
+  "version": "0.0.1-SNAPSHOT",
+  "group": "net.mpqdata.app"
+}
 ```
 
 #### GraphQL 
@@ -116,7 +123,7 @@ $ curl
 
 | Name                     | Value                                                | Notes / Example      |
 |--------------------------|------------------------------------------------------|----------------------|
-| SPRING_PROFILES_ACTIVE   | Spring profiles to activate for a particular job run | `download-archive,load-database` |
+| SPRING_PROFILES_ACTIVE   | Spring profiles to activate for a particular job run |                      |
 | SPRING_DATASOURCE_URL    | URL for the mpqdata database. | `jdbc:postgresql://localhost:5432/mpqdata`      |
 | SPRING_DATAUSER_USERNAME | Database username             | |
 | SPRING_DATAUSER_PASSWORD | Database password             | |
