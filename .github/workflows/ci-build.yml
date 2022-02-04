@@ -22,3 +22,7 @@ jobs:
       gradleArgs: ${{ github.event.inputs.gradleArgs }}
       buildDockerImage: true
       uploadHelmChart: false
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} 
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} 
+
