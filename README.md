@@ -89,10 +89,17 @@ Endpoint: /api/rest/v{version}/hello
 
 ```bash 
 # Hello Request 
-$ curl 
+$ curl http://localhost:8080/api/rest/v1/hello
 ```
 
 ```json 
+{
+  "artifact": "mpqdata-api",
+  "apiVersion": "1",
+  "now": "2022-02-04T07:21:42.122+00:00",
+  "version": "0.0.1-SNAPSHOT",
+  "group": "net.mpqdata.app"
+}
 ```
 
 #### GraphQL 
