@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mpqdata-api.fullname" . }}
+  labels:
+    {{- include "mpqdata-api.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "mpqdata-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "mpqdata-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "mpqdata-api.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env: 
+            {{- if .Values.config.profiles.active}}
+            - name: SPRING_PROFILES_ACTIVE
+              value: "{{ join "," .Values.config.profiles.active }}"
+            {{- end }}
+            {{- if .Values.config.cloudConfig.uri}}
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: "{{ .Values.config.cloudConfig.uri }}"
+            {{- end }}
+            {{- if .Values.config.db.url}}
+            - name: SPRING_DATASOURCE_URL
+              value: "{{ .Values.config.db.url }}"  
+            {{- end }}
+            {{- if .Values.config.db.username }}
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-db-creds"
+                  key: "username"
+            {{- end }}
+            {{- if .Values.config.db.password }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-db-creds"
+                  key: "password"
+            {{- end }}
+            {{- if .Values.config.mpq.deviceId }}
+            - name: MPQ_GAME_API_DEVICEID
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-device-id"
+                  key: "device-id"
+            {{- end }}
+            {{- if .Values.extraEnv }}
+              {{- toYaml .Values.extraEnv | nindent 10 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: actuator
+              containerPort: 8081
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /api/rest/v1/hello # TODO: Update to actuator urls
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /api/rest/v1/hello # TODO: Update to actuator urls
+              port: http
+          startupProbe:
+            httpGet:
+              path: /api/rest/v1/hello # TODO: Update to actuator urls
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
