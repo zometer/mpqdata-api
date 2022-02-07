@@ -35,11 +35,12 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} 
   
   troubleshoot:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: WTF 
         run: | 
-          echo "${{ toJSON(inputs) }}"
+          echo "${{ toJSON(needs.build.outputs) }}"
 
   deploy-helm-chart:
     needs: build
