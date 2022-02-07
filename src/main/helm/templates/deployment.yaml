@@ -79,16 +79,16 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /api/rest/v1/hello # TODO: Update to actuator urls
-              port: http
+              path: /actuator/health/liveness
+              port: actuator
           readinessProbe:
             httpGet:
-              path: /api/rest/v1/hello # TODO: Update to actuator urls
-              port: http
+              path: /actuator/health/readiness
+              port: actuator
           startupProbe:
             httpGet:
-              path: /api/rest/v1/hello # TODO: Update to actuator urls
-              port: http
+              path: /actuator/health/readiness
+              port: actuator
             failureThreshold: 30
             periodSeconds: 10
           resources:
