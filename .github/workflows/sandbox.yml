@@ -40,7 +40,7 @@ jobs:
     steps:
       - name: WTF 
         run: | 
-          echo "${{ toJSON(needs.build.outputs) }}"
+          echo "${{ toJSON(needs.build) }}"
 
   deploy-helm-chart:
     needs: build
