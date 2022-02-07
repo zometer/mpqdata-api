@@ -6,8 +6,6 @@ plugins {
 	id 'java'
 }
 
-group = 'net.mpqdata.app'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
