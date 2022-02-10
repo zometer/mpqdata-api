@@ -31,7 +31,7 @@ class RestApiVersionInterceptorTests {
 	class PreHandleWithHttpServletRequestAndHttpServletResponseAndObject {
 
 		@Test
-		void setsRestApiVersionWithVersionFromUrl() throws Exception {
+		void setsRestApiVersionThreadLocalWithVersionFromUrl() throws Exception {
 			String version = "2";
 			String uri = String.format("/api/rest/v%s/hello", version);
 
