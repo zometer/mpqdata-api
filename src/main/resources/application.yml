@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: mpqdata-api
+  config: 
+    import: "configserver:"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile:
+        - test
+    import: "classpath:"
+  cloud:
+    config:
+      enable: false

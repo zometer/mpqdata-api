@@ -1,0 +1,120 @@
+package net.mpqdata.app.mpqdataapi.model.service;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.RequestEntity.UriTemplateRequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import net.mpqdata.app.mpqdataapi.model.domain.Alliance;
+import net.mpqdata.app.mpqdataapi.model.domain.AllianceSearchResults;
+import net.mpqdata.app.mpqdataapi.model.repository.AllianceRepository;
+import net.mpqdata.app.mpqdataapi.test.junit.ClassNameDisplayNameGenerator;
+
+@DisplayNameGeneration(ClassNameDisplayNameGenerator.class)
+@ExtendWith(MockitoExtension.class)
+class AllianceServiceTests {
+
+	private static final String ALLIANCE_SEARCH_URL = "https://api.local/alliance/search/?q={allianceName}&ExcludeFull={excludeFull}&ExcludePrivate={excludePrivate}";
+	private static final String DEVICE_ID = "MY_DEVICE_ID";
+	private static final String DEVICE_ID_HEADER= "X-My-Device-Id";
+
+	@Mock
+	private RestTemplate restTemplate;
+
+	@Mock
+	private ResponseEntity<AllianceSearchResults> searchResultsresponseEntity;
+
+	@Captor
+	private ArgumentCaptor<Map<String, Object>> uriMapCaptor;
+
+	@Captor
+	private ArgumentCaptor<UriTemplateRequestEntity<Void>> requestEntityCaptor;
+
+	@Captor
+	private ArgumentCaptor<ParameterizedTypeReference<List<Alliance>>> allianceListTypeRefCaptor;
+
+	@Mock
+	private AllianceSearchResults allianceSearchResults;
+
+	@Mock
+	private AllianceRepository allianceRepository;
+
+	@Nested
+	class SearchAlliancesWithString {
+
+		@Test
+		void callsSearchAllianceWithExcludesFullEqualsFalseAndExcludesPrivateEqualsFalse() {
+			AllianceService spyService = spy(new AllianceService());
+			String allianceName = "foo";
+			List<Alliance> list = List.of();
+			doReturn(list).when(spyService).searchAlliances(allianceName, false, false);
+
+			spyService.searchAlliances(allianceName);
+
+			verify(spyService).searchAlliances(allianceName, false, false);
+		}
+
+	}
+
+	@Nested
+	class SearchAlliancesWithStringAndBooleanAndBoolean {
+
+		@Test
+		void callsRestTemplateWithUrlWhenNoAlliancesAreFoundInDatabase() {
+			String allianceNameSearch = "foo";
+			Alliance alliance = new Alliance();
+			// doThrow(EntityNotFoundException.class).when(allianceRepository).fetchByAllianceName(allianceName);
+			doReturn(List.of(alliance)).when(allianceSearchResults).getResults();
+			doReturn(allianceSearchResults).when(searchResultsresponseEntity).getBody();
+			doReturn(searchResultsresponseEntity).when(restTemplate).exchange(requestEntityCaptor.capture(), eq(AllianceSearchResults.class)) ;
+
+			AllianceService service = new AllianceService();
+			service.setAllianceSearchUrl(ALLIANCE_SEARCH_URL);
+			service.setDeviceIdHeader(DEVICE_ID_HEADER);
+			service.setDeviceId(DEVICE_ID);
+			service.setRestTemplate(restTemplate);
+
+			boolean excludeFull = false;
+			boolean excludePrivate = true;
+
+			List<Alliance> results = service.searchAlliances(allianceNameSearch, excludeFull, excludePrivate);
+
+			verify(restTemplate).exchange(requestEntityCaptor.capture(), eq(AllianceSearchResults.class));
+			UriTemplateRequestEntity<Void> requestEntity = requestEntityCaptor.getValue();
+			assertAll( "Error Validating request",
+				() -> { assertEquals(DEVICE_ID, requestEntity.getHeaders().get(DEVICE_ID_HEADER).get(0), "Did not find expected device id header"); },
+				() -> { assertEquals(ALLIANCE_SEARCH_URL, requestEntity.getUriTemplate(), "Did not find expected uri template"); },
+				() -> { assertEquals(allianceNameSearch, requestEntity.getVarsMap().get("allianceNameSearch"), "Did not find expected allianceName"); },
+				() -> { assertEquals(excludeFull, requestEntity.getVarsMap().get("excludeFull"), "Did not find expected 'excludeFull' value"); },
+				() -> { assertEquals(excludePrivate, requestEntity.getVarsMap().get("excludePrivate"), "Did not find expected 'excludePrivate' value"); }
+			);
+			assertAll( "Error validating Results",
+				() -> { assertNotNull(results, "Null result list"); },
+				() -> { assertEquals(1, results.size(), "Unexpected result size"); },
+				() -> { assertSame(alliance, results.get(0), "Unexepect alliance returned"); }
+			);
+		}
+
+	}
+
+}

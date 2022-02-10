@@ -14,16 +14,6 @@ on:
         required: false
         default: '' 
         type: string
-      buildDockerImage:
-        description: 'Build Docker Image'     
-        required: false
-        default: "true"
-        type: boolean
-      uploadHelmChart:
-        description: 'Upload Helm Chart'     
-        required: false
-        default: "false"
-        type: boolean
 
 jobs:
   build:
@@ -31,7 +21,7 @@ jobs:
     with: 
       gradleArgs: ${{ github.event.inputs.gradleArgs }}
       buildDockerImage: true
-      uploadHelmChart: false
+      uploadHelmChart: true
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} 
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} 
