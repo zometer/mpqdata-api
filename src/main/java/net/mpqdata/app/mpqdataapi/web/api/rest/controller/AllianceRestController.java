@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.Setter;
-import net.mpqdata.app.mpqdataapi.model.domain.Alliance;
+import net.mpqdata.app.mpqdataapi.model.domain.AllianceSearchResult;
 import net.mpqdata.app.mpqdataapi.model.service.AllianceService;
 
 @RestController
@@ -19,7 +19,7 @@ public class AllianceRestController {
 	private AllianceService allianceService;
 
 	@RequestMapping("/api/rest/v{version}/search/alliance")
-	public List<Alliance> searchAlliances(@RequestParam(required = true, value="q") String query) {
+	public List<AllianceSearchResult> searchAlliances(@RequestParam(required = true, value="q") String query) {
 		return allianceService.searchAlliances(query);
 	}
 

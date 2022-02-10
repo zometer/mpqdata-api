@@ -12,7 +12,7 @@ import lombok.Data;
 @Entity
 @Table(schema="mpq_data")
 @Data
-public class Alliance {
+public class AllianceSearchResult {
 
 	@Id
 	private Long allianceId;
