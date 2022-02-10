@@ -61,7 +61,7 @@ spec:
                   key: "password"
             {{- end }}
             {{- if .Values.config.mpq.deviceId }}
-            - name: MPQ_GAME_API_DEVICEID
+            - name: MPQ_API_DEVICEID
               valueFrom:
                 secretKeyRef:
                   name: "{{ .Release.Name }}-device-id"
