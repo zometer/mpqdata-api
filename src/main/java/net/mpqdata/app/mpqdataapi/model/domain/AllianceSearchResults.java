@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class AllianceSearchResults {
 
-	private List<Alliance> results;
+	private List<AllianceSearchResult> results;
 
 }

@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.mpqdata.app.mpqdataapi.model.domain.Alliance;
+import net.mpqdata.app.mpqdataapi.model.domain.AllianceSearchResult;
 import net.mpqdata.app.mpqdataapi.model.service.AllianceService;
 import net.mpqdata.app.mpqdataapi.test.junit.ClassNameDisplayNameGenerator;
 
@@ -31,17 +32,59 @@ class AllianceRestControllerTests {
 		@Test
 		void callsSerivceAndReturnsResults() {
 			String searchQuery = "foo";
-			List<Alliance> alliances = List.of();
+			List<AllianceSearchResult> alliances = List.of();
 			doReturn(alliances).when(allianceService).searchAlliances(searchQuery);
 
 			AllianceRestController controller = new AllianceRestController();
 			controller.setAllianceService(allianceService);
 
-			List<Alliance> results = controller.searchAlliances(searchQuery);
+			List<AllianceSearchResult> results = controller.searchAlliances(searchQuery);
 
 			verify(allianceService).searchAlliances(searchQuery);
 			verifyNoMoreInteractions(allianceService);
 			assertSame(alliances, results, "unexpected alliance search results");
+		}
+
+	}
+
+	@Nested
+	class FetchAllianceByNameWithString {
+
+		@Test
+		void callsSerivceAndReturnsResults() {
+			String allianceName = "foo";
+			Alliance alliance = new Alliance();
+			doReturn(alliance).when(allianceService).fetchAllianceByName(allianceName);
+
+			AllianceRestController controller = new AllianceRestController();
+			controller.setAllianceService(allianceService);
+
+			Alliance result = controller.fetchAllianceByName(allianceName);
+
+			verify(allianceService).fetchAllianceByName(allianceName);
+			verifyNoMoreInteractions(allianceService);
+			assertSame(alliance, result, "unexpected alliance search results");
+		}
+
+	}
+
+	@Nested
+	class FetchAllianceWithString {
+
+		@Test
+		void callsSerivceAndReturnsResults() {
+			String allianceGuid = "foo";
+			Alliance alliance = new Alliance();
+			doReturn(alliance).when(allianceService).fetchAlliance(allianceGuid);
+
+			AllianceRestController controller = new AllianceRestController();
+			controller.setAllianceService(allianceService);
+
+			Alliance result = controller.fetchAllianceByGuid(allianceGuid);
+
+			verify(allianceService).fetchAlliance(allianceGuid);
+			verifyNoMoreInteractions(allianceService);
+			assertSame(alliance, result, "unexpected alliance search results");
 		}
 
 	}
