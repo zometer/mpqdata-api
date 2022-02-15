@@ -27,20 +27,20 @@ class AllianceRestControllerTests {
 	private AllianceService allianceService;
 
 	@Nested
-	class SearchAlliancesWithString {
+	class SearchAlliancesWithStringAndBooleanAndBoolean {
 
 		@Test
 		void callsSerivceAndReturnsResults() {
 			String searchQuery = "foo";
 			List<AllianceSearchResult> alliances = List.of();
-			doReturn(alliances).when(allianceService).searchAlliances(searchQuery);
+			doReturn(alliances).when(allianceService).searchAlliances(searchQuery, true, false);
 
 			AllianceRestController controller = new AllianceRestController();
 			controller.setAllianceService(allianceService);
 
-			List<AllianceSearchResult> results = controller.searchAlliances(searchQuery);
+			List<AllianceSearchResult> results = controller.searchAlliances(searchQuery, true, false);
 
-			verify(allianceService).searchAlliances(searchQuery);
+			verify(allianceService).searchAlliances(searchQuery, true, false);
 			verifyNoMoreInteractions(allianceService);
 			assertSame(alliances, results, "unexpected alliance search results");
 		}
