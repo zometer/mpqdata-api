@@ -12,7 +12,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(schema="mpq_data", name="player")
-public class AllianceMember {
+public class Player {
 
 	@Id
 	private Long playerId;
