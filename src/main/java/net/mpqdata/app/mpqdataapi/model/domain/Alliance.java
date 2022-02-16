@@ -12,6 +12,6 @@ import lombok.EqualsAndHashCode;
 public class Alliance extends AbstractAllianceData {
 
 	@JsonAlias("alliance_members")
-	private List<AllianceMember> members;
+	private List<Player> members;
 
 }

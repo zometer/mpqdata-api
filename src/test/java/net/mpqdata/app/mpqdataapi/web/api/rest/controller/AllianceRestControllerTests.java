@@ -16,7 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.mpqdata.app.mpqdataapi.model.domain.Alliance;
 import net.mpqdata.app.mpqdataapi.model.domain.AllianceSearchResult;
+import net.mpqdata.app.mpqdataapi.model.domain.Player;
 import net.mpqdata.app.mpqdataapi.model.service.AllianceService;
+import net.mpqdata.app.mpqdataapi.model.service.PlayerService;
 import net.mpqdata.app.mpqdataapi.test.junit.ClassNameDisplayNameGenerator;
 
 @DisplayNameGeneration(ClassNameDisplayNameGenerator.class)
@@ -25,6 +27,9 @@ class AllianceRestControllerTests {
 
 	@Mock
 	private AllianceService allianceService;
+
+	@Mock
+	private PlayerService playerService;
 
 	@Nested
 	class SearchAlliancesWithStringAndBooleanAndBoolean {
@@ -57,11 +62,32 @@ class AllianceRestControllerTests {
 			doReturn(alliance).when(allianceService).fetchAllianceByName(allianceName);
 
 			AllianceRestController controller = new AllianceRestController();
+			controller.setPlayerService(playerService);
 			controller.setAllianceService(allianceService);
 
 			Alliance result = controller.fetchAllianceByName(allianceName);
 
 			verify(allianceService).fetchAllianceByName(allianceName);
+			verifyNoMoreInteractions(allianceService);
+			assertSame(alliance, result, "unexpected alliance search results");
+		}
+
+		@Test
+		void savesAllianceMembersAfterAllianceIsReadFromService() {
+			String allianceName = "foo";
+			Alliance alliance = new Alliance();
+			List<Player> members = List.of(new Player());
+			alliance.setMembers(members);
+			doReturn(alliance).when(allianceService).fetchAllianceByName(allianceName);
+
+			AllianceRestController controller = new AllianceRestController();
+			controller.setAllianceService(allianceService);
+			controller.setPlayerService(playerService);
+
+			Alliance result = controller.fetchAllianceByName(allianceName);
+
+			verify(allianceService).fetchAllianceByName(allianceName);
+			verify(playerService).mergeAndSave(members);
 			verifyNoMoreInteractions(allianceService);
 			assertSame(alliance, result, "unexpected alliance search results");
 		}
@@ -79,6 +105,7 @@ class AllianceRestControllerTests {
 
 			AllianceRestController controller = new AllianceRestController();
 			controller.setAllianceService(allianceService);
+			controller.setPlayerService(playerService);
 
 			Alliance result = controller.fetchAllianceByGuid(allianceGuid);
 
@@ -87,6 +114,25 @@ class AllianceRestControllerTests {
 			assertSame(alliance, result, "unexpected alliance search results");
 		}
 
+		@Test
+		void savesAllianceMembersAfterAllianceIsReadFromService() {
+			String allianceGuid = "foo";
+			Alliance alliance = new Alliance();
+			List<Player> members = List.of(new Player());
+			alliance.setMembers(members);
+			doReturn(alliance).when(allianceService).fetchAlliance(allianceGuid);
+
+			AllianceRestController controller = new AllianceRestController();
+			controller.setAllianceService(allianceService);
+			controller.setPlayerService(playerService);
+
+			Alliance result = controller.fetchAllianceByGuid(allianceGuid);
+
+			verify(allianceService).fetchAlliance(allianceGuid);
+			verify(playerService).mergeAndSave(members);
+			verifyNoMoreInteractions(allianceService);
+			assertSame(alliance, result, "unexpected alliance search results");
+		}
 	}
 
 }
