@@ -12,6 +12,7 @@ import lombok.Setter;
 import net.mpqdata.app.mpqdataapi.model.domain.Alliance;
 import net.mpqdata.app.mpqdataapi.model.domain.AllianceSearchResult;
 import net.mpqdata.app.mpqdataapi.model.service.AllianceService;
+import net.mpqdata.app.mpqdataapi.model.service.PlayerService;
 
 @RestController
 public class AllianceRestController {
@@ -19,6 +20,10 @@ public class AllianceRestController {
 	@Autowired
 	@Setter
 	private AllianceService allianceService;
+
+	@Autowired
+	@Setter
+	private PlayerService playerService;
 
 	@RequestMapping("/api/rest/v{version}/search/alliance")
 	public List<AllianceSearchResult> searchAlliances(
@@ -32,12 +37,16 @@ public class AllianceRestController {
 
 	@RequestMapping("/api/rest/v{version}/alliance/{allianceName}")
 	public Alliance fetchAllianceByName(@PathVariable("allianceName") String allianceName) {
-		return allianceService.fetchAllianceByName(allianceName);
+		Alliance alliance = allianceService.fetchAllianceByName(allianceName);
+		playerService.mergeAndSave( alliance.getMembers() );
+		return alliance;
 	}
 
 	@RequestMapping("/api/rest/v{version}/alliance/guid/{allianceGuid}")
 	public Alliance fetchAllianceByGuid(@PathVariable("allianceGuid") String allianceGuid) {
-		return allianceService.fetchAlliance(allianceGuid);
+		Alliance alliance = allianceService.fetchAlliance(allianceGuid);
+		playerService.mergeAndSave( alliance.getMembers() );
+		return alliance;
 	}
 
 }
