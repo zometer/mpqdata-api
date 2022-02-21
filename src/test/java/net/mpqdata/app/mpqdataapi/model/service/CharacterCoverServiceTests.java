@@ -61,4 +61,23 @@ class CharacterCoverServiceTests {
 
 	}
 
+	@Nested
+	class FetchCoverWithLong {
+
+		@Test
+		void callsRepoToQueryById() {
+			Long coverId = 1l;
+			CharacterCover cover = new CharacterCover();
+			doReturn(cover).when(characterCoverRepository).getById(coverId);
+
+			CharacterCoverService service = new CharacterCoverService();
+			service.setCharacterCoverRepository(characterCoverRepository);
+
+			CharacterCover result = service.fetchCover(coverId);
+
+			assertSame(cover, result, "Expected the domain object to be returned.");
+		}
+
+	}
+
 }

@@ -16,6 +16,10 @@ public class CharacterCoverService {
 	@Setter
 	private CharacterCoverRepository characterCoverRepository;
 
+	public CharacterCover fetchCover(long coverId) {
+		return characterCoverRepository.getById(coverId);
+	}
+
 	public List<CharacterCover> fetchUnprocessedCovers() {
 		return characterCoverRepository.findByCompleteFalse();
 	}
