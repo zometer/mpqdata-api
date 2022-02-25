@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Nested;
@@ -68,7 +69,7 @@ class CharacterCoverServiceTests {
 		void callsRepoToQueryById() {
 			Long coverId = 1l;
 			CharacterCover cover = new CharacterCover();
-			doReturn(cover).when(characterCoverRepository).getById(coverId);
+			doReturn( Optional.of(cover) ).when(characterCoverRepository).findById(coverId);
 
 			CharacterCoverService service = new CharacterCoverService();
 			service.setCharacterCoverRepository(characterCoverRepository);
