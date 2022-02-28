@@ -33,5 +33,5 @@ public class Player {
 	@JsonAlias({"role", "alliance_role"})
 	@Transient
 	private String allianceRole;
-
+	
 }
