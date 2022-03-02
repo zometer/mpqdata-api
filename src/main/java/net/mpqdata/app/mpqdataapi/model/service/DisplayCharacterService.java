@@ -55,6 +55,7 @@ public class DisplayCharacterService {
 				})
 			;
 			dbChar.setInstanceId( c.getInstanceId() );
+			dbChar.setChampion( c.isChampion() );
 			removeDuplicates(dbChar.getAbilities());
 			for (int i=0; i < c.getAbilityLevels().size(); i++) {
 				int abilityLevel = convertRawAbilityLevel(c.getAbilityLevels().get(i));

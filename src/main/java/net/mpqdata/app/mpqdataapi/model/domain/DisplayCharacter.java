@@ -42,6 +42,9 @@ public class DisplayCharacter implements Serializable {
 	@Transient
 	private Long instanceId;
 
+	@Transient
+	private Boolean champion;
+
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(
 		name="mpq_character_key",
