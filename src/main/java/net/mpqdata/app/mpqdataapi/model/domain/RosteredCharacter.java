@@ -10,7 +10,7 @@ import lombok.Data;
 public class RosteredCharacter {
 
 	@JsonAlias("character_identifier")
-	private String mpqCharacterId;
+	private String mpqCharacterKey;
 
 	@JsonAlias("effective_level")
 	private int effectiveLevel;

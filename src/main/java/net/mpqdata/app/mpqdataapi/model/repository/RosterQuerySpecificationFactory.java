@@ -20,7 +20,7 @@ public class RosterQuerySpecificationFactory {
 			root.fetch("abilities");
 			Predicate[] charPredicates = characters.stream()
 				.map( c -> {
-					Predicate charId = builder.equal(root.get("mpqCharacterId"), c.getMpqCharacterId());
+					Predicate charId = builder.equal(root.get("mpqCharacterKey"), c.getMpqCharacterKey());
 					Predicate level = builder.equal(root.get("effectiveLevel"), c.getEffectiveLevel());
 
 					return builder.and(charId, level);

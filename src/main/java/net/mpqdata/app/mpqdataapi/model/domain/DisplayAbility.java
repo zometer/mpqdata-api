@@ -14,10 +14,12 @@ import lombok.Data;
 public class DisplayAbility {
 
 	@Id
-	private String abilityId;
+	private Integer abilityId;
+	private String abilityKey;
 
-	@Column(name = "mpq_character_id")
-	private String mpqCharacterId;
+	@Column(name = "mpq_character_key")
+	private String mpqCharacterKey;
+	private Integer abilitySet;
 	private int ordinalPosition;
 	private String color;
 	private int cost;

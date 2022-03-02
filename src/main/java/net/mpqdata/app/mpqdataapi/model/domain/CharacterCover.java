@@ -17,7 +17,7 @@ public class CharacterCover {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long characterCoverId;
 
-	private String mpqCharacterId;
+	private String mpqCharacterKey;
 	private Long marvelIssueId;
 	private Long gcdIssueId;
 	private Boolean customCover;

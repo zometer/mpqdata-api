@@ -65,7 +65,7 @@ public class PlayerService {
 		;
 
 		ExtendedPlayer extendedPlayer = restTemplate.exchange(requestEntity, ExtendedPlayer.class).getBody();
-		extendedPlayer.getCharacters().forEach( c -> c.setMpqCharacterId( c.getMpqCharacterId().replaceAll("_\\w+", "") ) );
+		extendedPlayer.getCharacters().forEach( c -> c.setMpqCharacterKey( c.getMpqCharacterKey().replaceAll("_\\w+", "") ) );
 		return extendedPlayer;
 	}
 }

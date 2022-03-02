@@ -26,7 +26,7 @@ public class DisplayCharacter implements Serializable {
 
 	@Id
 	private String displayCharacterId;
-	private String mpqCharacterId;
+	private String mpqCharacterKey;
 	private String name;
 	private String subtitle;
 	private int rarity;
@@ -35,14 +35,17 @@ public class DisplayCharacter implements Serializable {
 	private int displayLevel;
 	private int effectiveLevel;
 	private String localeLanguage;
+	private String imageUrlSmall;
+	private String imageUrlMedium;
+	private String imageUrlLarge;
 
 	@Transient
 	private Long instanceId;
 
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(
-		name="mpq_character_id",
-		referencedColumnName="mpqCharacterId",
+		name="mpq_character_key",
+		referencedColumnName="mpqCharacterKey",
 		foreignKey=@ForeignKey(value=ConstraintMode.NO_CONSTRAINT),
 		insertable=false, updatable=false
 	)
